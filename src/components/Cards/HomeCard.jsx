@@ -6,7 +6,7 @@ function HomeCard(props) {
                 src={props.bg}
                 alt="bg"
                 className="w-full rounded-lg rounded-b-none"
-                style={{height:200,width:300}}
+                style={{height:200,width:300,maxWidth:"90vw"}}
             />
         </div>
         <div className="px-4 py-2 mt-2">

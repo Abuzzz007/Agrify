@@ -75,6 +75,10 @@ function Sidebar(props) {
           >
             <i className="fas fa-bars"></i>
           </button>
+          <div className="flex cursor-pointer" onClick={() => {
+            setRoute("/")
+            history.push("/")
+          }}>
           <img className="w-12 h-12" src={logo} alt="Logo" />
           <h1
             className="mt-1 ml-1"
@@ -84,8 +88,9 @@ function Sidebar(props) {
               fontSize: 25,
             }}
           >
-            Agrify
+              Agrify
                 </h1>
+            </div>
         </div>
       </div>
 

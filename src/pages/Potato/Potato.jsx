@@ -17,7 +17,7 @@ function Cotton() {
     const Predict = async () => {
         setIsLoading(true)
 
-        const URL = "https://teachablemachine.withgoogle.com/models/clEJGWrhx/"
+        const URL = "https://teachablemachine.withgoogle.com/models/CBBtGIcUf/"
         
         let model;
 
@@ -44,11 +44,11 @@ function Cotton() {
         <>
      {isLoading ? <Loader /> : ""}
     <div className="left-0 sm:left-14 mt-14 sm:mt-0 lg:left-64 right-0 bg-gray-100 rounded-b-lg shadow fixed z-10">
-            <div className="p-1 pl-4 sm:p-4 text-lg sm:text-2xl">Cotton</div>
+            <div className="p-1 pl-4 sm:p-4 text-lg sm:text-2xl">Potato</div>
             </div>
             <div className="flex flex-wrap pt-24 sm:pt-16 z-0">
                 <div className="ml-5 text-2xl w-full px-4 pt-8 max-w-md mt-5">
-                    Please upload image of cotton leaf
+                    Please upload image of potato leaf
                 </div>
                 <div className="mx-auto mt-5 w-full">
                     {image.url ? <>

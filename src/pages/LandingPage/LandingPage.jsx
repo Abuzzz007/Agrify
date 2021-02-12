@@ -5,6 +5,9 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import bg from "../../assets/Wave-33.3s-1920px.svg"
 //Pages
 import Home from "../Home/Home"
+import Tomato from "../Tomato/Tomato"
+import Potato from "../Potato/Potato"
+import Pepper from "../Pepper/Pepper"
 import Cotton from "../Cotton/Cotton"
 
 function Dashboard(props) {
@@ -23,7 +26,10 @@ function Dashboard(props) {
           <div className="fixed h-screen w-screen" style={{ backgroundImage: `url(${bg})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", top: "-40vh" }}></div>
           <div className="relative">
           <Switch>
-            <Route path="/" exact component={Home} />
+              <Route path="/" exact component={Home} />
+              <Route path="/tomato" exact component={Tomato} />
+              <Route path="/potato" exact component={Potato}/>
+              <Route path="/pepper" exact component={Pepper}/>
             <Route path="/cotton" exact component={Cotton}/>
             <Redirect path="*" to="/" />
             </Switch>
