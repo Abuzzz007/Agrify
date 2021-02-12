@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 //Images
 import logo from "../../assets/logo192.png";
+import bg from "../../assets/farming.jpg"
 //Components
 import Loader from "../../components/Loaders/LoginLoader";
 import NetworkErrModal from "../../components/Modals/NetworkErrModal";
@@ -24,18 +25,6 @@ function Login(props) {
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
 
-  const resize = () => {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
-  };
-  resize();
-
-  useEffect(() => {
-    window.addEventListener("resize", resize);
-
-    return () => window.removeEventListener("resize", resize);
-  }, []);
-
   const formHandler = (e) => {
     if (e.target.id !== "remember") {
       setState({ ...state, [e.target.id]: e.target.value });
@@ -49,9 +38,11 @@ function Login(props) {
     firebase
       .auth()
       .signInWithEmailAndPassword(state.email, state.password)
-      .then(() => {
+      .then((userCredential) => {
+        let user = userCredential.user;
         setIsLoading(false);
         let authData = JSON.stringify({
+          name: user.displayName,
           email: state.email,
           password: state.password,
         });
@@ -124,15 +115,15 @@ function Login(props) {
   return (
     <>
       {showModal ? <NetworkErrModal setShowModal={setShowModal} /> : ""}
-      <div className="w-full h-full bg-gray-700">
+      <div className="w-full h-full">
         <div
-          className="absolute w-screen h-screen bg-gray-700"
-          style={{ height: "calc(var(--vh, 1vh) * 100)" }}
+          className="fixed w-screen h-screen"
+          style={{ height: "calc(var(--vh, 1vh) * 100)", backgroundImage: `url(${bg})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundAttachment: "fixed" }}
         ></div>
         <div className="container mx-auto px-4" style={{ paddingTop: "5vh" }}>
           <div className="flex content-center items-center justify-center h-full">
             <div className="w-full sm:w-6/12 lg:w-5/12 xl:w-4/12 2xl:w-3/12 px-4">
-              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-900 border-0">
+              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-900 border-0 opacity-90">
                 <img className="mx-auto h-36 w-36" src={logo} alt="logo" />
                 <h1
                   className="w-full text-center -mt-6"
@@ -169,11 +160,11 @@ function Login(props) {
                       {valid.email ? (
                         ""
                       ) : (
-                        <div className="text-red-600 text-xs -mb-4">
-                          <i className="fas fa-exclamation-triangle mx-1"></i>
-                          {valid.eContent}
-                        </div>
-                      )}
+                          <div className="text-red-600 text-xs -mb-4">
+                            <i className="fas fa-exclamation-triangle mx-1"></i>
+                            {valid.eContent}
+                          </div>
+                        )}
                     </div>
 
                     <div className="relative w-full mb-5">
@@ -194,11 +185,11 @@ function Login(props) {
                       {valid.password ? (
                         ""
                       ) : (
-                        <div className="text-red-600 text-xs -mb-4">
-                          <i className="fas fa-exclamation-triangle mx-1"></i>
-                          {valid.pContent}
-                        </div>
-                      )}
+                          <div className="text-red-600 text-xs -mb-4">
+                            <i className="fas fa-exclamation-triangle mx-1"></i>
+                            {valid.pContent}
+                          </div>
+                        )}
                     </div>
                     <div>
                       <label className="inline-flex items-center cursor-pointer">

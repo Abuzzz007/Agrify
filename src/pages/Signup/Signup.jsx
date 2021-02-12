@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
 //Images
 import logo from "../../assets/logo192.png";
+import bg from "../../assets/farming.jpg"
 //Components
 import Loader from "../../components/Loaders/LoginLoader";
 import NetworkErrModal from "../../components/Modals/NetworkErrModal";
@@ -27,18 +28,6 @@ function Signup(props) {
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
 
-  const resize = () => {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
-  };
-  resize();
-
-  useEffect(() => {
-    window.addEventListener("resize", resize);
-
-    return () => window.removeEventListener("resize", resize);
-  }, []);
-
   const formHandler = (e) => {
     if (e.target.id !== "remember") {
       setState({ ...state, [e.target.id]: e.target.value });
@@ -47,44 +36,55 @@ function Signup(props) {
     }
   };
 
-  const loginHandler = () => {
+  const signinHandler = () => {
     setIsLoading(true);
     firebase
-      .auth()
-      .signInWithEmailAndPassword(state.email, state.password)
-      .then(() => {
-        setIsLoading(false);
-        let authData = JSON.stringify({
-          email: state.email,
-          password: state.password,
-        });
-        if (state.remember) {
-          window.localStorage.setItem("auth_data", authData);
-        } else {
-          window.sessionStorage.setItem("auth_data", authData);
-        }
-        props.setIsLoggedIn("true");
+      .auth().createUserWithEmailAndPassword(state.email, state.password)
+      .then((userCredential) => {
+        let user = userCredential.user;
+        user.updateProfile({
+          displayName: state.name
+        }).then(() => {
+          setIsLoading(false);
+          let authData = JSON.stringify({
+            name: state.name,
+            email: state.email,
+            password: state.password,
+          });
+          if (state.remember) {
+            window.localStorage.setItem("auth_data", authData);
+          } else {
+            window.sessionStorage.setItem("auth_data", authData);
+          }
+          props.setIsLoggedIn("true");
+        })
+
       })
       .catch((err) => {
-        setIsLoading(false);
-        if (err.code === "auth/user-not-found") {
+        setIsLoading(false)
+        if (err.code === "auth/email-already-in-use") {
           setValid({
+            name: true,
             email: false,
             password: true,
-            eContent: "This email is not authorized!",
+            nContent: "",
+            eContent: "A user with this email already exists!",
             pContent: "",
           });
-        } else if (err.code === "auth/wrong-password") {
+        } else if (err.code === "auth/weak-password") {
           setValid({
+            name: true,
             email: true,
             password: false,
+            nContent: "",
             eContent: "",
-            pContent: "Wrong password",
+            pContent: "Weak password",
           });
-        } else {
-          setShowModal(true);
         }
-      });
+        else {
+          setShowModal(true)
+        }
+      })
   };
 
   const submitHandler = (e) => {
@@ -126,22 +126,22 @@ function Signup(props) {
     setValid(Validobj);
     if (!Valid) return;
 
-    //login function
-    loginHandler();
+    //signin function
+    signinHandler();
   };
 
   return (
     <>
       {showModal ? <NetworkErrModal setShowModal={setShowModal} /> : ""}
-      <div className="w-full h-full bg-gray-700">
+      <div className="w-full h-full">
         <div
-          className="absolute w-screen h-screen bg-gray-700"
-          style={{ height: "calc(var(--vh, 1vh) * 100)" }}
+          className="fixed w-screen h-screen bg-gray-700"
+          style={{ height: "calc(var(--vh, 1vh) * 100)", backgroundImage: `url(${bg})`, backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundAttachment: "fixed" }}
         ></div>
         <div className="container mx-auto px-4" style={{ paddingTop: "5vh" }}>
           <div className="flex content-center items-center justify-center h-full">
             <div className="w-full sm:w-6/12 lg:w-5/12 xl:w-4/12 2xl:w-3/12 px-4">
-              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-900 border-0">
+              <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-gray-900 border-0 opacity-90">
                 <img className="mx-auto h-36 w-36" src={logo} alt="logo" />
                 <h1
                   className="w-full text-center -mt-6"
@@ -178,11 +178,11 @@ function Signup(props) {
                       {valid.name ? (
                         ""
                       ) : (
-                        <div className="text-red-600 text-xs -mb-4">
-                          <i className="fas fa-exclamation-triangle mx-1"></i>
-                          {valid.nContent}
-                        </div>
-                      )}
+                          <div className="text-red-600 text-xs -mb-4">
+                            <i className="fas fa-exclamation-triangle mx-1"></i>
+                            {valid.nContent}
+                          </div>
+                        )}
                     </div>
 
                     <div className="relative w-full mb-5">
@@ -203,11 +203,11 @@ function Signup(props) {
                       {valid.email ? (
                         ""
                       ) : (
-                        <div className="text-red-600 text-xs -mb-4">
-                          <i className="fas fa-exclamation-triangle mx-1"></i>
-                          {valid.eContent}
-                        </div>
-                      )}
+                          <div className="text-red-600 text-xs -mb-4">
+                            <i className="fas fa-exclamation-triangle mx-1"></i>
+                            {valid.eContent}
+                          </div>
+                        )}
                     </div>
 
                     <div className="relative w-full mb-5">
@@ -228,11 +228,11 @@ function Signup(props) {
                       {valid.password ? (
                         ""
                       ) : (
-                        <div className="text-red-600 text-xs -mb-4">
-                          <i className="fas fa-exclamation-triangle mx-1"></i>
-                          {valid.pContent}
-                        </div>
-                      )}
+                          <div className="text-red-600 text-xs -mb-4">
+                            <i className="fas fa-exclamation-triangle mx-1"></i>
+                            {valid.pContent}
+                          </div>
+                        )}
                     </div>
                     <div>
                       <label className="inline-flex items-center cursor-pointer">
@@ -244,7 +244,7 @@ function Signup(props) {
                           onChange={formHandler}
                         />
                         <span className="ml-2 text-sm font-semibold text-gray-300">
-                          Log me in
+                          Remember me
                         </span>
                       </label>
                     </div>

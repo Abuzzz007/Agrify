@@ -30,6 +30,18 @@ function App() {
     }
   }, []);
 
+  const resize = () => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  };
+  resize();
+
+  useEffect(() => {
+    window.addEventListener("resize", resize);
+
+    return () => window.removeEventListener("resize", resize);
+  }, []);
+
   const loginHandler = () => {
     let localData = window.localStorage.getItem("auth_data");
     if (!localData) localData = window.sessionStorage.getItem("auth_data");
