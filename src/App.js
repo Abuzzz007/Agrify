@@ -13,6 +13,7 @@ firebase.initializeApp(firebaseConfig);
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     if (
       window.sessionStorage.getItem("auth_data") ||
@@ -25,6 +26,7 @@ function App() {
         loader.style.opacity = "0";
         setTimeout(() => {
           loader.remove();
+          setIsLoading(false)
         }, 500);
       }
     }
@@ -57,30 +59,35 @@ function App() {
           loader.style.opacity = "0";
           setTimeout(() => {
             loader.remove();
+            setIsLoading(false)
           }, 500);
         }
       });
   };
 
   let route;
-  if (isLoggedIn) {
-    route = <LandingPage setIsLoggedIn={setIsLoggedIn} />;
+  if (!isLoading) {
+    if (isLoggedIn) {
+      route = <LandingPage setIsLoggedIn={setIsLoggedIn} />;
+    } else {
+      route = (
+        <Switch>
+          <Route
+            path="/login"
+            exact
+            render={() => <Login setIsLoggedIn={setIsLoggedIn} />}
+          />
+          <Route
+            path="/signup"
+            exact
+            render={() => <Signup setIsLoggedIn={setIsLoggedIn} />}
+          />
+          <Redirect path="*" to="login" />
+        </Switch>
+      );
+    }
   } else {
-    route = (
-      <Switch>
-        <Route
-          path="/login"
-          exact
-          render={() => <Login setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Route
-          path="/signup"
-          exact
-          render={() => <Signup setIsLoggedIn={setIsLoggedIn} />}
-        />
-        <Redirect path="*" to="login" />
-      </Switch>
-    );
+    route=""
   }
   return route;
 }
