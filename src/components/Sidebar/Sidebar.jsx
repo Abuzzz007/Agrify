@@ -184,6 +184,21 @@ function Sidebar(props) {
           <button
             className={
               "flex items-center mt-5 py-3 lg:py-2 px-4 lg:px-8 w-full focus:outline-none " +
+              (route === "/forum" ? selected : unselected)
+            }
+            onClick={() => {
+              history.push("/forum");
+              setRoute("/forum");
+            }}
+          >
+            <span className="mx-4 font-medium lg:block hidden">
+              Forum
+            </span>
+          </button>
+
+          <button
+            className={
+              "flex items-center mt-5 py-3 lg:py-2 px-4 lg:px-8 w-full focus:outline-none " +
               unselected
             }
             onClick={() => setShowModal(true)}
@@ -279,6 +294,19 @@ function Sidebar(props) {
             }}
           >
             <span className="mx-4 font-medium block">Cotton</span>
+          </button>
+
+          <button
+            className={
+              "menu-btn flex items-center mt-5 py-2 px-8 w-full focus:outline-none " +
+              (route === "/forum" ? selected : unselected)
+            }
+            onClick={() => {
+              history.push("/forum");
+              setRoute("/forum");
+            }}
+          >
+            <span className="mx-4 font-medium block">Forum</span>
           </button>
 
           <button

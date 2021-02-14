@@ -9,6 +9,7 @@ import Tomato from "../Tomato/Tomato"
 import Potato from "../Potato/Potato"
 import Pepper from "../Pepper/Pepper"
 import Cotton from "../Cotton/Cotton"
+import Forum from "../Forum/Forum"
 
 function Dashboard(props) {
   let vh = window.innerHeight * 0.01;
@@ -30,7 +31,8 @@ function Dashboard(props) {
               <Route path="/tomato" exact component={Tomato} />
               <Route path="/potato" exact component={Potato}/>
               <Route path="/pepper" exact component={Pepper}/>
-            <Route path="/cotton" exact component={Cotton}/>
+              <Route path="/cotton" exact component={Cotton} />
+              <Route path="/forum" exact component={Forum}/>
             <Redirect path="*" to="/" />
             </Switch>
             </div>
